@@ -26,22 +26,32 @@ struc TSS
     .ldt:       resw 2
     .trap:      resw 1
     .iomap:     resw 1
-    .size:
 endstruc
 
 section .bss
 align 4
 global ____tss
-____tss:    resb TSS.size
+____tss:    resb 104
 
 extern stack_top
+extern gdt_task_state
 section .text
+global load_tss
+load_tss:
+    mov eax, ____tss
+    mov [gdt_task_state + 2], ax
+    shr eax, 16
+    mov [gdt_task_state + 4], al
+    mov [gdt_task_state + 7], ah
+
+    mov word [____tss + TSS.ss0], 0x10
     mov eax, stack_top
     mov [____tss + TSS.esp0], eax
+    mov word [____tss + TSS.iomap], 104
 
     call flush_tss
+    ret
 
-global flush_tss
 flush_tss:
     mov ax, (5 * 8) | 0
     ltr ax

@@ -68,11 +68,29 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 }
 
 void terminal_putchar(char c) {
-    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-    if (++terminal_column == VGA_WIDTH) {
-        terminal_column = 0;
-        if (++terminal_row == VGA_HEIGHT)
+    switch (c) {
+        case '\n':
+            {
+                terminal_column = 0;
+                terminal_row++;
+                break;
+            }
+        default:
+        {
+            terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+            terminal_column++;
+            break;
+        }
+
+        if (terminal_column >= VGA_WIDTH) {
+            terminal_column = 0;
+            terminal_row++;
+        }
+
+        if (terminal_row >= VGA_HEIGHT) {
+            terminal_column = 0;
             terminal_row = 0;
+        }
     }
 }
 
@@ -81,14 +99,20 @@ void terminal_write(const char* data, size_t size) {
         terminal_putchar(data[i]);
 }
 
-void terminal_writestring(const char* data) {
+void kernel_puts(const char* data) {
     terminal_write(data, strlen(data));
 }
 
+extern void load_idt();
 extern void jmp2ring3(void);
+
 void kernel_main(void) {
     terminal_initialize();
-    terminal_writestring("Hello gatOS");
+    kernel_puts("Hello gatOS\n");
+    kernel_puts("You are currently in the Kernel!\n");
+
+    load_idt();
+    kernel_puts("IDT Loaded\n");
 
     jmp2ring3();
 }

@@ -31,12 +31,13 @@ gdt_user_data:      ; 0x20
     db 0xF2
     db 11001111b
     db 0
+global gdt_task_state
 gdt_task_state:     ; 0x28
     dw 103              ; sizeof(TSS) - 1
     dw 0                ; Patch at runtime
     db 0                ; Patch at runtime
     db 0x89
-    db 0
+    db 11001111b
     db 0
 
 gdt_end:
@@ -47,13 +48,6 @@ gdt_descriptor:
 section .text
 global load_gdt
 load_gdt:
-extern ____tss
-    mov eax, ____tss
-    mov [gdt_task_state + 2], ax
-    shr eax, 16
-    mov [gdt_task_state + 4], al
-    mov [gdt_task_state + 7], ah
-
     lgdt [gdt_descriptor]
     jmp 0x08:.reload
     

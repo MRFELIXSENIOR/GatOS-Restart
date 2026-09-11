@@ -1,7 +1,7 @@
 include scripts/common.mk
 include kernel/arch/i386/boot.mk
 
-$(BUILD_DIR)/gatOS: ${ASM_OBJECTS} $(BUILD_DIR)/kernel.o
+$(BUILD_DIR)/gatOS: ${OBJECTS} 
 	@echo "Building gatOS"
 	@$(LD) -o $@ -T $(KERNEL_DIR)/arch/i386/linker.ld $^
 
@@ -11,11 +11,14 @@ $(BUILD_DIR)/$(OS_IMAGE): $(BUILD_DIR)/gatOS
 
 .PHONY: clean run all
 
-run: $(BUILD_DIR)/$(OS_IMAGE)
-	$(QEMU) $(QEMU_FLAGS)
+bochs: $(BUILD_DIR)/$(OS_IMAGE)
+	$(BOCHS) $(BOCHS_FLAGS)
 
-debug: $(BUILD_DIR)/$(OS_IMAGE)
-	$(QEMU) $(QEMU_DFLAGS)
+qemu: $(BUILD_DIR)/$(OS_IMAGE)
+	@$(QEMU) $(QEMU_FLAGS)
+
+qemu_debug:	$(BUILD_DIR)/$(OS_IMAGE)
+	@$(QEMU) $(QEMU_DFLAGS)
 
 all: $(BUILD_DIR)/$(OS_IMAGE)
 

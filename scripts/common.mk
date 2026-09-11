@@ -1,10 +1,13 @@
 export OS_IMAGE		= 	gatOS.iso
 
-export QEMU			= 	qemu-system-i386.exe
-export QEMU_FLAGS	= 	-drive file=$(BUILD_DIR)/$(OS_IMAGE),format=raw
+export BOCHS		= 	bochs.exe
+export BOCHS_FLAGS	= 	-f bochs.txt
+
+export QEMU			=	qemu-system-i386.exe
+export QEMU_FLAGS	=	-drive file=$(BUILD_DIR)/$(OS_IMAGE),format=raw
 export QEMU_DFLAGS	=	$(QEMU_FLAGS) -d int,cpu_reset -no-reboot
 
-export CFLAGS 		= 	-std=c11 -ffreestanding -O2 -Wall -Wextra $(addprefix -I,$(INCLUDE_DIR))
+export CFLAGS 		= 	-std=c17 -ffreestanding -O2 -Wall -Wextra -masm=intel $(addprefix -I,$(INCLUDE_DIR))
 export AR_FLAGS		= 	-rvs
 export ASM_FLAGS	=	-felf32
 export ASM			= 	nasm

@@ -1,0 +1,12 @@
+magic_break: enabled=1
+
+cpu: count=1, ips=10000000
+megs: 256
+ata0-master: type=cdrom, path="build/gatOS.iso", status=inserted
+boot: cdrom
+
+log: ./build/bochs-log.txt
+panic: action=ask
+error: action=ask
+panic: action=ask
+info:  action=report
