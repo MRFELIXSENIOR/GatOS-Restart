@@ -1,4 +1,5 @@
 #include "idt.h"
+#include "vga.h"
 
 const char* exception_messages[] = {
     "Division by Zero\n",
@@ -53,7 +54,6 @@ typedef struct {
     uint32_t eip, cs, eflags, useresp, ss;
 } registers_t;
 
-extern void kernel_puts(const char*);
 void isr_handler(registers_t* regs) {
     kernel_puts(exception_messages[regs->int_number]);
     

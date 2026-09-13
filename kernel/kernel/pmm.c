@@ -25,4 +25,3 @@ void load_pmm(uint32_t upper) {
     for (uint32_t i = KERNEL_PAGE_SIZE; i < total_blocks; i++)
         CLEARBIT(i);
 }
-
